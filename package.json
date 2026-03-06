@@ -8,10 +8,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npx playwright test",
-    "test:public": "npx playwright test tests/public",
-    "test:private": "npx playwright test tests/private",
-    "test:ui": "npx playwright test --ui"
+    "test": "npx playwright test -c src/frontend/playwright.config.ts",
+    "test:public": "npx playwright test -c src/frontend/playwright.config.ts tests/public",
+    "test:private": "npx playwright test -c src/frontend/playwright.config.ts tests/private",
+    "test:ui": "npx playwright test -c src/frontend/playwright.config.ts --ui"
   },
   "repository": {
     "type": "git",
