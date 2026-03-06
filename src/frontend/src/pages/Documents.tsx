@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Eye, Plus } from 'lucide-react';
-import { getDocuments } from '../services/document.api';
-import { showError } from '../utils/toast';
+import { FileText, Eye, Plus, Trash2 } from 'lucide-react';
+import { getDocuments, deleteDocument } from '../services/document.api';
+import { showError, showSuccess } from '../utils/toast';
+import { DeleteConfirmDialog } from '../components/DeleteConfirmDialog';
 
 interface Document {
     id: number;
@@ -19,6 +20,10 @@ export const Documents = () => {
     const [documents, setDocuments] = useState<Document[]>([]);
     const [loading, setLoading] = useState(true);
 
+    // Delete dialog state
+    const [deleteTarget, setDeleteTarget] = useState<Document | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     const fetchDocuments = async () => {
         setLoading(true);
         try {
@@ -32,10 +37,41 @@ export const Documents = () => {
         }
     };
 
-
     useEffect(() => {
         fetchDocuments();
     }, []);
+
+    // ── Delete handlers ──────────────────────────────────────────────────────
+
+    /** Open the confirmation dialog for the chosen document. */
+    const handleDeleteClick = (e: React.MouseEvent, doc: Document) => {
+        e.stopPropagation(); // prevent row navigation
+        setDeleteTarget(doc);
+    };
+
+    /** User confirmed — call the API and update local state on success. */
+    const handleDeleteConfirm = async () => {
+        if (!deleteTarget) return;
+        setIsDeleting(true);
+        try {
+            await deleteDocument(deleteTarget.id);
+            setDocuments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
+            showSuccess(`"${deleteTarget.name}" deleted successfully.`);
+        } catch (error) {
+            console.error('Failed to delete document:', error);
+            showError('Failed to delete document. Please try again.');
+        } finally {
+            setIsDeleting(false);
+            setDeleteTarget(null);
+        }
+    };
+
+    /** User cancelled — close dialog without doing anything. */
+    const handleDeleteCancel = () => {
+        if (!isDeleting) setDeleteTarget(null);
+    };
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
 
     const formatSize = (bytes: number) => {
         if (bytes === 0) return '0 B';
@@ -45,22 +81,28 @@ export const Documents = () => {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
-
     const getFileIcon = (contentType: string, name: string) => {
         const nameLower = name.toLowerCase();
-
-        // Text files (.txt)
         if (nameLower.endsWith('.txt') || contentType === 'text/plain') {
             return <FileText size={20} className="text-gray-600" />;
         }
-
-        // Default
         return <FileText size={20} className="text-gray-500" />;
     };
 
+    // ── Render ───────────────────────────────────────────────────────────────
 
     return (
         <div className="p-6 max-w-[1600px] mx-auto bg-gray-50/50 min-h-screen">
+            {/* Confirmation dialog (rendered at top level so it overlays everything) */}
+            {deleteTarget && (
+                <DeleteConfirmDialog
+                    documentName={deleteTarget.name}
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={handleDeleteCancel}
+                    isDeleting={isDeleting}
+                />
+            )}
+
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
@@ -80,8 +122,6 @@ export const Documents = () => {
 
             {/* Main Content Card */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-
-
                 {/* Table */}
                 <div className="overflow-x-auto">
                     {loading ? (
@@ -134,16 +174,29 @@ export const Documents = () => {
                                             </td>
                                             <td className="py-4 px-4 text-gray-500 text-sm font-mono text-right">{formatSize(doc.size)}</td>
                                             <td className="py-4 px-4 pr-6 text-right">
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        navigate(`/documents/${doc.id}`);
-                                                    }}
-                                                    className="p-2 hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 rounded-lg transition-colors"
-                                                    title="View"
-                                                >
-                                                    <Eye size={18} />
-                                                </button>
+                                                <div className="flex items-center justify-end gap-1">
+                                                    {/* View button */}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            navigate(`/documents/${doc.id}`);
+                                                        }}
+                                                        className="p-2 hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 rounded-lg transition-colors"
+                                                        title="View"
+                                                    >
+                                                        <Eye size={18} />
+                                                    </button>
+
+                                                    {/* Delete button */}
+                                                    <button
+                                                        onClick={(e) => handleDeleteClick(e, doc)}
+                                                        className="p-2 hover:bg-rose-50 text-gray-400 hover:text-rose-600 rounded-lg transition-colors"
+                                                        title="Delete"
+                                                        aria-label={`Delete ${doc.name}`}
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))
