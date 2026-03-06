@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, FileText } from 'lucide-react';
-import { type ApiDocument, getDocument } from '../services/document.api';
+import { ArrowLeft, FileText, Trash2 } from 'lucide-react';
+import { type ApiDocument, getDocument, deleteDocument } from '../services/document.api';
 import axios from 'axios';
-import { showError } from '../utils/toast';
-
+import { showError, showSuccess } from '../utils/toast';
+import { DeleteConfirmDialog } from '../components';
 
 import './DocumentView.css';
 
@@ -15,12 +15,14 @@ export const DocumentView: React.FC = () => {
     const [textContent, setTextContent] = useState("");
     const [loading, setLoading] = useState(true);
 
+    // Delete dialog state
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         const fetchDocument = async () => {
             if (!id) return;
             try {
-                // Direct fetch using the new endpoint
                 const doc = await getDocument(parseInt(id));
                 setDocument(doc);
             } catch (error) {
@@ -56,6 +58,21 @@ export const DocumentView: React.FC = () => {
         fetchContent();
     }, [document]);
 
+    const handleDeleteConfirm = async () => {
+        if (!document) return;
+        setIsDeleting(true);
+        try {
+            await deleteDocument(document.id);
+            showSuccess('Document deleted successfully');
+            navigate('/documents');
+        } catch (error) {
+            console.error('Failed to delete document:', error);
+            showError('Failed to delete document');
+            setIsDeleting(false);
+            setShowDeleteDialog(false);
+        }
+    };
+
     if (loading || !document) {
         return (
             <div className="loading-container">
@@ -67,11 +84,9 @@ export const DocumentView: React.FC = () => {
         );
     }
 
-    // Helper to get file icon based on type
     const getFileIcon = () => {
         return <FileText size={24} color="#64748b" strokeWidth={1.5} />;
     };
-
 
     const renderContent = () => {
         const isTxtFile = document.name.toLowerCase().endsWith('.txt');
@@ -95,6 +110,16 @@ export const DocumentView: React.FC = () => {
 
     return (
         <div className="document-view-container">
+            {/* Delete Confirmation Dialog */}
+            {showDeleteDialog && (
+                <DeleteConfirmDialog
+                    filename={document.name}
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={() => setShowDeleteDialog(false)}
+                    isDeleting={isDeleting}
+                />
+            )}
+
             <div className="document-view-content">
                 {/* Unified Card Container */}
                 <div className="document-card">
@@ -136,7 +161,13 @@ export const DocumentView: React.FC = () => {
 
                         {/* Action Buttons Container */}
                         <div className="document-actions">
-
+                            <button
+                                onClick={() => setShowDeleteDialog(true)}
+                                className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg transition-colors"
+                                title="Delete Document"
+                            >
+                                <Trash2 size={18} />
+                            </button>
                         </div>
                     </div>
 
