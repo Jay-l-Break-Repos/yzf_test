@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import "./App.css";
 import { Toaster } from "react-hot-toast";
-import { CustomAlert, Header, Sidebar } from "./components";
+import { Blog, CustomAlert, Header, Sidebar } from "./components";
 
 import { Documents } from './pages/Documents';
 import { Upload } from './pages/Upload';
@@ -31,6 +31,7 @@ function AppContent() {
   return (
     <div className="app-container" style={{ flexDirection: 'column' }}>
       <Header />
+      <Blog title="Morning" detail="Morning My Friends" />
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row', overflow: 'hidden', minHeight: 0 }}>
         {!isDocumentView && !isHome && <Sidebar />}
         <main className="main-content" style={{
