@@ -121,5 +121,3 @@ async def delete_document(
 
     session.delete(document)
     session.commit()
-
-    return {"message": f"Document '{document.name}' (id={document_id}) deleted successfully."}
