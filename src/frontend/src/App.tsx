@@ -1,10 +1,8 @@
-
-
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import "./App.css";
 import { Toaster } from "react-hot-toast";
-import { CustomAlert, Sidebar } from "./components";
+import { Blog, CustomAlert, Header, Sidebar } from "./components";
 
 import { Documents } from './pages/Documents';
 import { Upload } from './pages/Upload';
@@ -31,22 +29,25 @@ function AppContent() {
   }, [navigate]);
 
   return (
-    <div className="app-container" style={{ flexDirection: 'row' }}>
-      {!isDocumentView && !isHome && <Sidebar />}
-      <main className="main-content" style={{
-        flex: 1,
-        height: '100vh',
-        overflowY: (isDocumentView || isHome) ? 'hidden' : 'auto',
-        padding: (isDocumentView || isHome) ? 0 : '2rem',
-        maxWidth: (isDocumentView || isHome) ? '100%' : '1200px'
-      }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/documents" element={<Documents />} />
-          <Route path="/documents/:id" element={<DocumentView />} />
-          <Route path="/upload" element={<Upload />} />
-        </Routes>
-      </main>
+    <div className="app-container" style={{ flexDirection: 'column' }}>
+      <Header />
+      <Blog title="Morning" detail="Morning My Friends" />
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'row', overflow: 'hidden', minHeight: 0 }}>
+        {!isDocumentView && !isHome && <Sidebar />}
+        <main className="main-content" style={{
+          flex: 1,
+          overflowY: (isDocumentView || isHome) ? 'hidden' : 'auto',
+          padding: (isDocumentView || isHome) ? 0 : '2rem',
+          maxWidth: (isDocumentView || isHome) ? '100%' : '1200px'
+        }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/documents" element={<Documents />} />
+            <Route path="/documents/:id" element={<DocumentView />} />
+            <Route path="/upload" element={<Upload />} />
+          </Routes>
+        </main>
+      </div>
     </div>
   );
 }

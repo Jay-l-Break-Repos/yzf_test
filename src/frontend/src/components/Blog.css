@@ -1,0 +1,18 @@
+.blog-container {
+  padding: 1.5rem 2rem;
+}
+
+.blog-title {
+  font-size: 24px;
+  width: fit-content;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.75rem 0;
+}
+
+.blog-detail {
+  font-size: 1rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.6;
+}
