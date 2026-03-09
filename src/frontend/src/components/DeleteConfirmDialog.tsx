@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
 interface DeleteConfirmDialogProps {
@@ -18,6 +18,30 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
     onCancel,
     isDeleting = false,
 }) => {
+    const dialogRef = useRef<HTMLDivElement>(null);
+
+    // Handle keyboard events for accessibility
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onCancel();
+            }
+        };
+
+        // Add event listener
+        window.addEventListener('keydown', handleKeyDown);
+        
+        // Focus the dialog when it opens
+        if (dialogRef.current) {
+            dialogRef.current.focus();
+        }
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onCancel]);
+
     return (
         /* Backdrop */
         <div
@@ -26,11 +50,13 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
         >
             {/* Dialog panel */}
             <div
+                ref={dialogRef}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="delete-dialog-title"
                 className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 flex flex-col gap-5"
                 onClick={(e) => e.stopPropagation()}
+                tabIndex={-1} // Make the dialog focusable
             >
                 {/* Icon + Heading */}
                 <div className="flex items-center gap-3">
@@ -58,6 +84,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
                         onClick={onCancel}
                         disabled={isDeleting}
                         className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50"
+                        aria-label="Cancel deletion"
                     >
                         Cancel
                     </button>
@@ -65,6 +92,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
                         onClick={onConfirm}
                         disabled={isDeleting}
                         className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-60 flex items-center gap-2"
+                        aria-label={`Delete ${filename}`}
                     >
                         {isDeleting ? (
                             <>
