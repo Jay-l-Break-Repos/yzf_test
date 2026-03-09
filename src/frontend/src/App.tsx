@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import "./App.css";
 import { Toaster } from "react-hot-toast";
-import { CustomAlert, Sidebar } from "./components";
+import { CustomAlert, Header, Sidebar } from "./components";
 
 import { Documents } from './pages/Documents';
 import { Upload } from './pages/Upload';
@@ -31,7 +31,9 @@ function AppContent() {
   }, [navigate]);
 
   return (
-    <div className="app-container" style={{ flexDirection: 'row' }}>
+    <div className="app-container" style={{ flexDirection: 'column' }}>
+      <Header />
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'row', overflow: 'hidden' }}>
       {!isDocumentView && !isHome && <Sidebar />}
       <main className="main-content" style={{
         flex: 1,
@@ -47,6 +49,7 @@ function AppContent() {
           <Route path="/upload" element={<Upload />} />
         </Routes>
       </main>
+      </div>
     </div>
   );
 }
