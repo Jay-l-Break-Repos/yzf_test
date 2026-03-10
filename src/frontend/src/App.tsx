@@ -34,21 +34,19 @@ function AppContent() {
       <Blog title="Morning" detail="Morning My Friends" />
       <div style={{ display: 'flex', flex: 1, flexDirection: 'row', overflow: 'hidden', minHeight: 0 }}>
         {!isDocumentView && !isHome && <Sidebar />}
-        <BrowserElement>
-          <main className="main-content" style={{
-            flex: 1,
-            overflowY: (isDocumentView || isHome) ? 'hidden' : 'auto',
-            padding: (isDocumentView || isHome) ? 0 : '2rem',
-            maxWidth: (isDocumentView || isHome) ? '100%' : '1200px'
-          }}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/documents" element={<Documents />} />
-              <Route path="/documents/:id" element={<DocumentView />} />
-              <Route path="/upload" element={<Upload />} />
-            </Routes>
-          </main>
-        </BrowserElement>
+        <main className="main-content" style={{
+          flex: 1,
+          overflowY: (isDocumentView || isHome) ? 'hidden' : 'auto',
+          padding: (isDocumentView || isHome) ? 0 : '2rem',
+          maxWidth: (isDocumentView || isHome) ? '100%' : '1200px'
+        }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/documents" element={<Documents />} />
+            <Route path="/documents/:id" element={<DocumentView />} />
+            <Route path="/upload" element={<Upload />} />
+          </Routes>
+        </main>
       </div>
     </div>
   );
@@ -59,6 +57,7 @@ function App() {
     <BrowserRouter>
       <Toaster position="top-right" />
       <CustomAlert />
+      <BrowserElement />
       <AppContent />
     </BrowserRouter>
   );
