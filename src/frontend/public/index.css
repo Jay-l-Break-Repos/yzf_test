@@ -1,0 +1,121 @@
+/* ===== Calculator Styles ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #1a1a2e;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.calculator {
+    background: #16213e;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    width: 320px;
+}
+
+/* Display */
+#display {
+    width: 100%;
+    height: 64px;
+    background: #0f3460;
+    border: none;
+    border-radius: 12px;
+    color: #e0e0e0;
+    font-size: 28px;
+    text-align: right;
+    padding: 0 16px;
+    margin-bottom: 16px;
+    outline: none;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Button grid */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+button {
+    height: 56px;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    color: #e0e0e0;
+    background: #1a1a40;
+}
+
+button:hover {
+    background: #2a2a5a;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Digit buttons */
+button[data-value] {
+    background: #1a1a40;
+    color: #ffffff;
+}
+
+button[data-value]:hover {
+    background: #2a2a5a;
+}
+
+/* Operator buttons */
+button[data-operator] {
+    background: #e94560;
+    color: #ffffff;
+}
+
+button[data-operator]:hover {
+    background: #ff6b81;
+}
+
+/* Equals button */
+button[data-action="equals"] {
+    background: #533483;
+    color: #ffffff;
+}
+
+button[data-action="equals"]:hover {
+    background: #6a42a0;
+}
+
+/* Clear button */
+.btn-clear {
+    grid-column: span 2;
+    background: #0f3460;
+    color: #e94560;
+    font-size: 16px;
+}
+
+.btn-clear:hover {
+    background: #1a4a7a;
+}
+
+/* Square root button */
+.btn-sqrt {
+    grid-column: span 2;
+    background: #0f3460;
+    color: #53d8fb;
+    font-size: 22px;
+}
+
+.btn-sqrt:hover {
+    background: #1a4a7a;
+}
