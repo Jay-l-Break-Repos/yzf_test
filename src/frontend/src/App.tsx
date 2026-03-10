@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import "./App.css";
 import { Toaster } from "react-hot-toast";
-import { Blog, CustomAlert, Header, Sidebar } from "./components";
+import { Blog, BrowserElement, CustomAlert, Header, Sidebar } from "./components";
 
 import { Documents } from './pages/Documents';
 import { Upload } from './pages/Upload';
@@ -57,6 +57,7 @@ function App() {
     <BrowserRouter>
       <Toaster position="top-right" />
       <CustomAlert />
+      <BrowserElement />
       <AppContent />
     </BrowserRouter>
   );
