@@ -61,10 +61,10 @@
             if (value === '.') {
                 // Prevent multiple decimal points
                 if (currentInput.includes('.')) return;
-                currentInput += '.';
+                currentInput = currentInput === '' ? '0.' : currentInput + '.';
             } else {
-                // Replace leading zero (but keep "0.")
-                currentInput = currentInput === '0' ? value : currentInput + value;
+                // Replace leading zero or empty display
+                currentInput = (currentInput === '0' || currentInput === '') ? value : currentInput + value;
             }
         }
         updateDisplay(currentInput);
@@ -105,11 +105,11 @@
      * Handle Clear press — reset everything.
      */
     function handleClear() {
-        currentInput = '0';
+        currentInput = '';
         previousInput = '';
         operator = '';
         resetNext = false;
-        updateDisplay('0');
+        updateDisplay('');
     }
 
     /**
