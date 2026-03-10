@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="calculator">
-        <input type="text" id="display" readonly value="0" />
+        <input type="text" id="display" readonly value="0" aria-label="Calculator display" />
         <div class="buttons">
             <!-- Row 1 -->
             <button data-value="7">7</button>
@@ -36,7 +36,7 @@
 
             <!-- Row 5: Clear and √ side by side -->
             <button data-action="clear" class="btn-clear">Clear</button>
-            <button data-action="sqrt" class="btn-sqrt">√</button>
+            <button data-action="sqrt" class="btn-sqrt" aria-label="Square root">√</button>
         </div>
     </div>
     <script src="index.js"></script>
