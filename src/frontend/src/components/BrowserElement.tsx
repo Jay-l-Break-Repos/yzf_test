@@ -3,13 +3,18 @@ import './BrowserElement.css';
 
 interface BrowserElementProps {
   children?: React.ReactNode;
+  iframeSrc?: string;
 }
 
-export const BrowserElement: React.FC<BrowserElementProps> = ({ children }) => {
+export const BrowserElement: React.FC<BrowserElementProps> = ({ children, iframeSrc }) => {
   return (
-    <div className="browser-element">
+    <div className="browser">
       <div className="topbar"></div>
-      {children}
+      {iframeSrc ? (
+        <iframe className="content" name="content" src={iframeSrc} title="Browser Content" />
+      ) : (
+        children
+      )}
     </div>
   );
 };
